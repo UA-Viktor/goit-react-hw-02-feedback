@@ -8,15 +8,31 @@ class Feelback extends Component {
         bad: 0,
     };
 
-    addingState = () => {
-        this.setState();
+    addingState = key => {
+        this.setState(prevState => ({
+            [key]: prevState[key] + 1,
+        }));
     };
 
-    countTotalFeedback() {}
+    countTotalFeedback = () => {
+        let sum = 0;
+        for (const key in this.state) {
+            sum += this.state[key];
+        }
+        return sum;
+    };
 
-    countPositiveFeedbackPercentage() {}
+    countPositiveFeedbackPercentage(total, good) {
+        return total === 0 ? 0 : Math.floor((good / total) * 100);
+    }
 
     render() {
+        const total = this.countTotalFeedback();
+        const percent = this.countPositiveFeedbackPercentage(
+            total,
+            this.state.good
+        );
+
         return (
             <>
                 <h1>Please leave feedback</h1>
@@ -32,6 +48,8 @@ class Feelback extends Component {
                     <p>Good: {this.state.good}</p>
                     <p>Neutral: {this.state.neutral}</p>
                     <p>Bad: {this.state.bad}</p>
+                    <p>Total: {total}</p>
+                    <p>Positive feedback: {percent} %</p>
                 </div>
             </>
         );
